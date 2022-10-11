@@ -1,15 +1,19 @@
 import csv
+import os
+import time
+
 from datetime import datetime
-from re import I
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 from modules.itemClass import Item
-import os
-import time
+from dotenv import load_dotenv
 
+load_dotenv()
+
+INITIAL_LINK = os.getenv("START_LINK")
 
 currentTime = datetime.now()
 ser = Service(os.path.abspath("assets/chromedriver.exe"))
@@ -52,7 +56,7 @@ def getPageData(url):
 
 
 
-getPageData("https://www.aruodas.lt/butai/vilniuje/?FRoomNumMin=1&FRoomNumMax=2&FHouseState=noteq&FOrder=Price")
+getPageData(INITIAL_LINK)
 
 #print(item_list)
 
