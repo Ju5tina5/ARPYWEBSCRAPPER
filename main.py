@@ -20,7 +20,7 @@ ser = Service(os.path.abspath("assets/chromedriver.exe"))
 options = Options()
 #options.headless = True
 options.add_argument("--window-size=640,480")
-driver = webdriver.Chrome(service=ser, options=options,)
+driver = webdriver.Chrome(service=ser, options=options)
 
 item_list = []
 
@@ -32,6 +32,7 @@ def getPageData(url):
         item_html = BeautifulSoup(item.get_attribute('outerHTML'), "html.parser")
         if item_html.find('span', {"class": "list-item-price"}):
             item = Item()
+            item.sku = item_html.find('div', {"class":"advert-controls-save"}).get('data-id')
             item.name = item_html.find('div', {"class":"list-photo"}).findNext('a').findNext('img')['alt']
             item.image = item_html.find('div', {"class":"list-photo"}).findNext('a').findNext('img')['src']
             item.url = item_html.find('div', {"class":"list-photo"}).findNext('a')['href']
@@ -39,7 +40,7 @@ def getPageData(url):
             item.price_for_sqm = item_html.find('span', {"class": "price-pm"}).text.replace('€/m²', '').strip()
             item.num_of_rooms = item_html.find('td', {'class' : 'list-RoomNum'}).text.strip()
             item.overall_size = item_html.find('td', {'class' : 'list-AreaOverall'}).text.strip()
-            item.floor = item_html.find('td', {'class' : 'list-Floors'}).text.replace('/', 'out of').strip()
+            item.floor = item_html.find('td', {'class' : 'list-Floors'}).text.replace('/', ' out of ').strip()
 
             item_list.append(item)
 
@@ -60,8 +61,8 @@ getPageData(INITIAL_LINK)
 
 #print(item_list)
 
-with open('Data-'+currentTime.strftime("%m-%d-%Y_%H-%M")+'.csv', 'w', encoding="utf-16", newline='') as csvfile:
+with open('Data-'+currentTime.strftime("%m-%d-%Y_%H-%M")+'.csv', 'w', encoding="Windows-1257", newline='') as csvfile:
     writer = csv.writer(csvfile)
-    writer.writerow(['Name', 'Image', 'Url', 'Price', 'Price For Sqm', 'Number of rooms', 'Size', 'Floor'])
+    writer.writerow(['Sku', 'Name', 'Image', 'Url', 'Price', 'Price For Sqm', 'Number of rooms', 'Size', 'Floor'])
     for data in item_list:
-        writer.writerow([data.name, data.image, data.url, data.price, data.price_for_sqm, data.num_of_rooms, data.overall_size, data.floor])
+        writer.writerow([data.sku, data.name, data.image, '=HYPERLINK("{}", "{}")'.format(data.url, data.url), data.price, data.price_for_sqm, data.num_of_rooms, data.overall_size, data.floor])
