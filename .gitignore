@@ -1,3 +1,5 @@
+modules/__pycache__/
+
 **/assets
 *.csv
 .env
