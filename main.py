@@ -19,6 +19,9 @@ currentTime = datetime.now()
 ser = Service(os.path.abspath("assets/chromedriver.exe"))
 options = Options()
 #options.headless = True
+#options.add_argument("--disable-gpu")
+
+#options.add_argument("--disable-software-rasterizer")
 options.add_argument("--window-size=640,480")
 driver = webdriver.Chrome(service=ser, options=options)
 
@@ -64,5 +67,8 @@ getPageData(INITIAL_LINK)
 with open('Data-'+currentTime.strftime("%m-%d-%Y_%H-%M")+'.csv', 'w', encoding="Windows-1257", newline='') as csvfile:
     writer = csv.writer(csvfile)
     writer.writerow(['Sku', 'Name', 'Image', 'Url', 'Price', 'Price For Sqm', 'Number of rooms', 'Size', 'Floor'])
-    for data in item_list:
+    print("header written")
+    for index, data in enumerate(item_list):
+        if index % 100 == 0 :
+            print('{} row created'.format(index))
         writer.writerow([data.sku, data.name, data.image, '=HYPERLINK("{}", "{}")'.format(data.url, data.url), data.price, data.price_for_sqm, data.num_of_rooms, data.overall_size, data.floor])
