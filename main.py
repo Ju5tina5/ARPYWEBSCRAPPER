@@ -20,7 +20,7 @@ options.add_argument("--window-size=640,480")
 options.add_argument("--disable-gpu")
 driver = webdriver.Chrome(service=ser, options=options)
 
-csvfile = open('Data-'+currentTime.strftime("%m-%d-%Y_%H-%M")+'.csv', 'w', encoding="Windows-1257", newline='')
+csvfile = open(os.path.abspath('scrappedData/Data-'+currentTime.strftime("%m-%d-%Y_%H-%M")+'.csv'), 'w', encoding="Windows-1257", newline='')
 writer = csv.writer(csvfile)
 writer.writerow(['Sku', 'Name', 'Image', 'Url', 'Price', 'Price For Sqm', 'Number of rooms', 'Size', 'Floor'])
 print("header written")
